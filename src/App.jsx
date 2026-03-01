@@ -1,35 +1,72 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
+
+// Using .env file excluded from git commits.
+// They contain raw values of API_URL, username and password.
+const API_URL = import.meta.env.VITE_API_URL;
+const USERNAME = import.meta.env.VITE_USERNAME;
+const PASSWORD = import.meta.env.VITE_PASSWORD;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(null);
+  const [name, setName] = useState("");
+
+  // Prevent loops and only run login once!
+  useEffect(() => {
+    login();
+  }, []);
+
+  async function login() {
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: USERNAME,
+          password: PASSWORD,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Login unsuccessful");
+      }
+
+      const data = await res.json();
+      setToken(data.access_token);
+      getName(data.access_token);
+    } catch (err) {
+      console.error("Error with login: ", err);
+    }
+  }
+
+  async function getName(jwt) {
+    try {
+      const res = await fetch(`${API_URL}/auth/profile`, {
+        headers: {
+          Authorization: "Bearer " + jwt,
+        },
+      });
+
+      const data = await res.json();
+
+      setName(data.firstName + " " + data.lastName);
+    } catch (err) {
+      console.error("Error getting name: ", err);
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Favourite Creddit Posts</h1>
+
+      <h2>{name}</h2>
+
+      {!token && <p>Logging in...</p>}
+      {token && <p>Logged in!</p>}
+    </div>
+  );
 }
 
-export default App
+export default App;
