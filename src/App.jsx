@@ -25,12 +25,9 @@ function App() {
 
   return (
     <div>
-      <h1>Favourite Creddit Posts</h1>
+      <div className="title">Favourite Creddit Posts</div>
 
-      <h2>{name}</h2>
-
-      {!token && <p>Logging in...</p>}
-      {token && <p>Logged in!</p>}
+      <div className="username">{name}</div>
     </div>
   );
 }
