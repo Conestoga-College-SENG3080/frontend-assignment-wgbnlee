@@ -13,7 +13,7 @@ import App from "./App.jsx";
 import Favourites from "./Favourites.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/frontend-assignment-wgbnlee/">
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/favourites" element={<Favourites />} />
