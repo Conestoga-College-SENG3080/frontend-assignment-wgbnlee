@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { login, getProfile } from "./api";
+import { Link } from "react-router-dom";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -14,7 +15,11 @@ function App() {
         setToken(jwt);
 
         const profile = await getProfile(jwt);
-        setName(profile.firstName + " " + profile.lastName);
+        const fullName = profile.firstName + " " + profile.lastName;
+        setName(fullName);
+
+        localStorage.setItem("token", jwt);
+        localStorage.setItem("name", fullName);
       } catch (err) {
         console.error("Authentication Error: ", err);
       }
@@ -26,6 +31,16 @@ function App() {
   return (
     <div>
       <div className="title">Favourite Creddit Posts</div>
+
+      <div className="navbar">
+        <Link to="/">
+          <button>Home</button>
+        </Link>
+
+        <Link to="/favourites">
+          <button>Favourite Posts</button>
+        </Link>
+      </div>
 
       <div className="username">{name}</div>
     </div>
