@@ -1,3 +1,11 @@
+/*
+ * Filename     : main.jsx
+ * Project      : PROG3080 - Frontend Assignment
+ * Programmers  : Will Lee
+ * Date         : 3/1/2026
+ * Description  : This file is the main file that the app runs from.
+ */
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
